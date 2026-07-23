@@ -1,0 +1,51 @@
+name: Flutter CI (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        description: "Carpeta de la app/paquete Flutter a analizar"
+        required: false
+        type: string
+        default: "."
+      flutter-version:
+        description: "Versión de Flutter (canal stable)"
+        required: false
+        type: string
+        default: "stable"
+      run-tests:
+        description: "Ejecutar flutter test además de analyze"
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  analyze-and-test:
+    name: Analyze & Test
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ inputs.flutter-version }}
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Run tests
+        if: ${{ inputs.run-tests }}
+        run: flutter test

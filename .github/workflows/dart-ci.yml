@@ -1,0 +1,45 @@
+name: Dart CI (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        description: "Carpeta del paquete Dart a analizar/testear"
+        required: false
+        type: string
+        default: "."
+      sdk:
+        description: "Versión del Dart SDK"
+        required: false
+        type: string
+        default: "stable"
+
+jobs:
+  analyze-and-test:
+    name: Analyze & Test
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Dart SDK
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ inputs.sdk }}
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze
+        run: dart analyze --fatal-infos
+
+      - name: Run tests
+        run: dart test --reporter=expanded

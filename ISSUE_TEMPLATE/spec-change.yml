@@ -1,0 +1,44 @@
+name: Spec change
+description: Un cambio en la especificación Kitsune Architecture que impacta repos aguas abajo.
+title: "[spec] "
+labels: ["spec-change"]
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción del cambio
+      description: Qué cambia en la spec y por qué.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: version
+    attributes:
+      label: Versión de spec afectada
+      options:
+        - "v2.x (actual)"
+        - "v1.x (archivada)"
+        - "Nueva versión"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: downstream
+    attributes:
+      label: Checklist de repos aguas abajo
+      description: Marcar qué repos necesitan actualizarse por este cambio.
+      options:
+        - label: "kitsune-architecture — README.md / README.es.md / docs/ actualizados"
+        - label: "kitsune-tools — generador actualizado, versión de pubspec.yaml bump, tests"
+        - label: "kitsune-examples — hello_flow y notes migrados a la nueva estructura"
+        - label: "Matriz de compatibilidad en README de kitsune-architecture actualizada"
+        - label: "CHANGELOG y tags de versión en cada repo afectado"
+        - label: "Milestone de organización creado/actualizado"
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notas adicionales
+    validations:
+      required: false
